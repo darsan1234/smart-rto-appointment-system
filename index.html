@@ -1,12 +1,158 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>Smart RTO Appointment System</title>
-</head>
-<body>
-  <h1>🚀 Smart RTO Appointment System is Live!</h1>
-  <p>This is your homepage.</p>
+  <style>
+    body {
+      font-family: Arial;
+      background: #f4f6f8;
+      margin: 0;
+    }
 
-  <a href="register.html">Go to Register Page</a>
+    header {
+      background: #2c3e50;
+      color: white;
+      padding: 15px;
+      text-align: center;
+    }
+
+    nav {
+      background: #34495e;
+      padding: 10px;
+      text-align: center;
+    }
+
+    nav a {
+      color: white;
+      margin: 10px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 15px;
+      margin: 15px 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    input, select, button {
+      padding: 10px;
+      margin: 5px;
+      width: 100%;
+    }
+
+    button {
+      background: #2ecc71;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #27ae60;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>🚗 Smart RTO Appointment System</h1>
+</header>
+
+<nav>
+  <a href="#">Home</a>
+  <a href="#book">Book Appointment</a>
+  <a href="#status">Check Status</a>
+</nav>
+
+<div class="container">
+
+  <!-- Services -->
+  <div class="card">
+    <h2>Available Services</h2>
+    <ul>
+      <li>Driving License</li>
+      <li>Learner License</li>
+      <li>Vehicle Registration</li>
+      <li>Ownership Transfer</li>
+    </ul>
+  </div>
+
+  <!-- Booking Form -->
+  <div class="card" id="book">
+    <h2>Book Appointment</h2>
+
+    <input type="text" id="name" placeholder="Enter Name">
+    <input type="email" id="email" placeholder="Enter Email">
+
+    <select id="service">
+      <option value="">Select Service</option>
+      <option>Driving License</option>
+      <option>Learner License</option>
+      <option>Vehicle Registration</option>
+    </select>
+
+    <input type="date" id="date">
+
+    <select id="slot">
+      <option>10:00 - 11:00</option>
+      <option>11:00 - 12:00</option>
+      <option>12:00 - 1:00</option>
+    </select>
+
+    <button onclick="bookAppointment()">Book Now</button>
+
+    <p id="message"></p>
+  </div>
+
+  <!-- Status -->
+  <div class="card" id="status">
+    <h2>Check Appointment Status</h2>
+
+    <input type="text" id="bookingId" placeholder="Enter Booking ID">
+    <button onclick="checkStatus()">Check</button>
+
+    <p id="statusResult"></p>
+  </div>
+
+</div>
+
+<script>
+function bookAppointment() {
+  let name = document.getElementById("name").value;
+  let service = document.getElementById("service").value;
+
+  if (name === "" || service === "") {
+    alert("Please fill all details");
+    return;
+  }
+
+  let bookingId = Math.floor(Math.random() * 10000);
+
+  document.getElementById("message").innerHTML =
+    "✅ Appointment booked! Your ID: " + bookingId;
+}
+
+function checkStatus() {
+  let id = document.getElementById("bookingId").value;
+
+  if (id === "") {
+    alert("Enter Booking ID");
+    return;
+  }
+
+  document.getElementById("statusResult").innerHTML =
+    "📌 Status: Booked (Demo)";
+}
+</script>
+
 </body>
 </html>
