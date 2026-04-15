@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <title>Smart RTO Appointment System</title>
+
   <style>
     body {
       font-family: Arial;
-      background: #f4f6f8;
       margin: 0;
+      background: #f4f6f8;
     }
 
     header {
@@ -36,16 +37,17 @@
 
     .card {
       background: white;
-      padding: 15px;
-      margin: 15px 0;
+      padding: 20px;
+      margin: 20px 0;
       border-radius: 8px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
 
-    input, select, button {
+    input, button {
       padding: 10px;
-      margin: 5px;
+      margin: 8px 0;
       width: 100%;
+      font-size: 16px;
     }
 
     button {
@@ -70,12 +72,11 @@
 <nav>
   <a href="#">Home</a>
   <a href="#book">Book Appointment</a>
-  <a href="#status">Check Status</a>
 </nav>
 
 <div class="container">
 
-  <!-- Services -->
+  <!-- SERVICES -->
   <div class="card">
     <h2>Available Services</h2>
     <ul>
@@ -86,71 +87,54 @@
     </ul>
   </div>
 
-  <!-- Booking Form -->
+  <!-- BOOKING -->
   <div class="card" id="book">
     <h2>Book Appointment</h2>
 
-    <input type="text" id="name" placeholder="Enter Name">
-    <input type="email" id="email" placeholder="Enter Email">
+    <input type="number" id="user_id" placeholder="Enter User ID">
+    <input type="number" id="slot_id" placeholder="Enter Slot ID">
 
-    <select id="service">
-      <option value="">Select Service</option>
-      <option>Driving License</option>
-      <option>Learner License</option>
-      <option>Vehicle Registration</option>
-    </select>
-
-    <input type="date" id="date">
-
-    <select id="slot">
-      <option>10:00 - 11:00</option>
-      <option>11:00 - 12:00</option>
-      <option>12:00 - 1:00</option>
-    </select>
-
-    <button onclick="bookAppointment()">Book Now</button>
+    <button onclick="bookAppointment()">Book Appointment</button>
 
     <p id="message"></p>
-  </div>
-
-  <!-- Status -->
-  <div class="card" id="status">
-    <h2>Check Appointment Status</h2>
-
-    <input type="text" id="bookingId" placeholder="Enter Booking ID">
-    <button onclick="checkStatus()">Check</button>
-
-    <p id="statusResult"></p>
   </div>
 
 </div>
 
 <script>
-function bookAppointment() {
-  let name = document.getElementById("name").value;
-  let service = document.getElementById("service").value;
+const BASE_URL = "http://localhost:5000/api"; // 🔁 change after deploy
 
-  if (name === "" || service === "") {
-    alert("Please fill all details");
+// BOOK APPOINTMENT
+async function bookAppointment() {
+  const user_id = document.getElementById("user_id").value;
+  const slot_id = document.getElementById("slot_id").value;
+
+  if (!user_id || !slot_id) {
+    alert("Please enter User ID and Slot ID");
     return;
   }
 
-  let bookingId = Math.floor(Math.random() * 10000);
+  try {
+    const response = await fetch(`${BASE_URL}/appointments/book`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        user_id: parseInt(user_id),
+        slot_id: parseInt(slot_id)
+      })
+    });
 
-  document.getElementById("message").innerHTML =
-    "✅ Appointment booked! Your ID: " + bookingId;
-}
+    const data = await response.json();
 
-function checkStatus() {
-  let id = document.getElementById("bookingId").value;
+    document.getElementById("message").innerHTML =
+      "✅ " + data.message;
 
-  if (id === "") {
-    alert("Enter Booking ID");
-    return;
+  } catch (error) {
+    document.getElementById("message").innerHTML =
+      "❌ Failed to connect to backend";
   }
-
-  document.getElementById("statusResult").innerHTML =
-    "📌 Status: Booked (Demo)";
 }
 </script>
 
