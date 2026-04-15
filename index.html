@@ -18,19 +18,6 @@
       text-align: center;
     }
 
-    nav {
-      background: #34495e;
-      padding: 10px;
-      text-align: center;
-    }
-
-    nav a {
-      color: white;
-      margin: 10px;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
     .container {
       padding: 20px;
     }
@@ -38,27 +25,33 @@
     .card {
       background: white;
       padding: 20px;
-      margin: 20px 0;
+      margin: 20px auto;
+      max-width: 400px;
       border-radius: 8px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
 
     input, button {
-      padding: 10px;
-      margin: 8px 0;
       width: 100%;
+      padding: 10px;
+      margin: 10px 0;
       font-size: 16px;
     }
 
     button {
-      background: #2ecc71;
+      background: #27ae60;
       color: white;
       border: none;
       cursor: pointer;
     }
 
     button:hover {
-      background: #27ae60;
+      background: #219150;
+    }
+
+    #message {
+      margin-top: 10px;
+      font-weight: bold;
     }
   </style>
 </head>
@@ -69,26 +62,9 @@
   <h1>🚗 Smart RTO Appointment System</h1>
 </header>
 
-<nav>
-  <a href="#">Home</a>
-  <a href="#book">Book Appointment</a>
-</nav>
-
 <div class="container">
 
-  <!-- SERVICES -->
   <div class="card">
-    <h2>Available Services</h2>
-    <ul>
-      <li>Driving License</li>
-      <li>Learner License</li>
-      <li>Vehicle Registration</li>
-      <li>Ownership Transfer</li>
-    </ul>
-  </div>
-
-  <!-- BOOKING -->
-  <div class="card" id="book">
     <h2>Book Appointment</h2>
 
     <input type="number" id="user_id" placeholder="Enter User ID">
@@ -102,15 +78,15 @@
 </div>
 
 <script>
-const BASE_URL = "http://localhost:5000/api"; // 🔁 change after deploy
+/* 🔁 CHANGE THIS IF YOUR PORT IS DIFFERENT */
+const BASE_URL = "http://localhost:5000/api";
 
-// BOOK APPOINTMENT
 async function bookAppointment() {
   const user_id = document.getElementById("user_id").value;
   const slot_id = document.getElementById("slot_id").value;
 
   if (!user_id || !slot_id) {
-    alert("Please enter User ID and Slot ID");
+    document.getElementById("message").innerHTML = "⚠️ Fill all fields";
     return;
   }
 
@@ -121,19 +97,24 @@ async function bookAppointment() {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        user_id: parseInt(user_id),
-        slot_id: parseInt(slot_id)
+        user_id: Number(user_id),
+        slot_id: Number(slot_id)
       })
     });
 
     const data = await response.json();
 
-    document.getElementById("message").innerHTML =
-      "✅ " + data.message;
+    if (response.ok) {
+      document.getElementById("message").innerHTML =
+        "✅ " + (data.message || "Appointment Booked");
+    } else {
+      document.getElementById("message").innerHTML =
+        "❌ " + (data.message || "Booking failed");
+    }
 
   } catch (error) {
     document.getElementById("message").innerHTML =
-      "❌ Failed to connect to backend";
+      "❌ Cannot connect to backend";
   }
 }
 </script>
